@@ -13,7 +13,7 @@ const adminRouter = require('./routes/admin');
 var UserModel = require("./models/CustomerModel");
 const app = express();
 
-import * as dotenv from 'dotenv';
+const dotenv = require('dotenv');
 dotenv.config();
 
 //Connecting to Mongodb
