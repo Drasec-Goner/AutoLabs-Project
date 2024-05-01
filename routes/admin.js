@@ -6,7 +6,7 @@ const GasModel = require('../models/GasModel');
 const ServiceModel = require('../models/ServiceModel');
 const CustomerModel = require('../models/CustomerModel');
 const UserModel = require("../models/UserModel");
-const sendEmail = require("../utils/mailer");
+
 
 // Set Image Storage
 const storage = multer.diskStorage({
@@ -79,9 +79,20 @@ router.get('/service', async function (req, res) {
 router.get('/service/email/:mailid', async function (req, res) {
 
     var client_email = req.params.mailid;
-    var mail_status = await sendEmail(client_email);
-    console.log("Email Status - " + mail_status);
-    res.redirect('/admin/service');
+    const formData = require('form-data');
+    const Mailgun = require('mailgun.js');
+    const mailgun = new Mailgun(formData);
+    const mg = mailgun.client({username: 'api', key: process.env.MAILGUN_API_KEY});
+    
+    mg.messages.create(process.env.MAILGUN_DOMAIN, {
+        from: 'AutoLabs Pvt Ltd. <autolabspvtltd@gmail.com>',
+        to: [client_email],
+        subject: "Welcome To AutoLabs ",
+        text: "Thanks for Registering with us. We will keep you updated with our latest offers and services.",
+        html: `<h1>Thanks for showing interest in our product. Hope you get your ride soon!</h1>`
+    })
+    .then(msg => console.log(msg)) 
+    .catch(err => console.log(err));    
 });
 
 
