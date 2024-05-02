@@ -34,7 +34,7 @@ const db = async () => {
     }
 }
 
-db(autolabs);
+db('autolabs');
 
 
 // view engine setup
